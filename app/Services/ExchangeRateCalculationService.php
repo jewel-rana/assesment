@@ -17,10 +17,10 @@ class ExchangeRateCalculationService
         $this->initRates();
     }
 
-    public function calculate($amount, $currency = 'USD')
+    public function calculate($amount, $from = 'USD', $to = 'EUR')
     {
-        if($currency !== ExchangeRateConstant::BASE_CURRENCY) {
-            $amount = array_key_exists($currency, $this->rates) ? $amount / $this->rates[$currency] : $amount;
+        if(array_key_exists($from, $this->rates) && array_key_exists($to, $this->rates)) {
+            $amount = $amount / ($this->rates[$from] / $this->rates[$to]);
         }
 
         return CommonHelper::formatNumber($amount);
