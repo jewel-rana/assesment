@@ -4,7 +4,7 @@ namespace App\Helpers;
 
 use App\Constants\CommissionConstant;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Cache;
+use Carbon\CarbonInterface;
 
 class CommonHelper
 {
@@ -23,33 +23,33 @@ class CommonHelper
         return self::{$format}($amount, $decimal);
     }
 
-    protected function ceil($number, $decimal = 0)
+    protected static function ceil($number, $decimal = 0)
     {
         return ceil($number);
     }
 
-    protected function round($number, $decimal = 0): float
+    protected static function round($number, $decimal = 0): float
     {
         return round($number, $decimal);
     }
 
-    protected function floor($number)
+    protected static function floor($number)
     {
         return floor($number);
     }
 
-    protected function float($number, $decimal = 2): float
+    protected static function float($number, $decimal = 2): float
     {
         return round($number, $decimal, PHP_ROUND_HALF_UP);
     }
 
     public static function firstDateOfWeek($date): string
     {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $date . ' 00:00:00')->startOfWeek(Carbon::MONDAY)->format('Y-m-d');
+        return Carbon::createFromFormat('Y-m-d H:i:s', $date . ' 00:00:00')->startOfWeek(CarbonInterface::MONDAY)->format('Y-m-d');
     }
 
     public static function lastDateOfWeek($date): string
     {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $date . ' 00:00:00')->endOfWeek(Carbon::SUNDAY)->format('Y-m-d');
+        return Carbon::createFromFormat('Y-m-d H:i:s', $date . ' 00:00:00')->endOfWeek(CarbonInterface::SUNDAY)->format('Y-m-d');
     }
 }

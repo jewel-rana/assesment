@@ -3,39 +3,34 @@
 namespace App\Console\Commands;
 
 use App\Services\CommissionService;
-use App\Services\ExchangeRateCalculationService;
 use App\Services\TransactionService;
 use Illuminate\Console\Command;
 
 class TransactionImportCommand extends Command
 {
-    protected $signature = 'transaction:import';
+    protected $signature = 'transaction:import {file}';
 
     protected $description = 'Export transaction from csv file';
     private TransactionService $transactionService;
     private CommissionService $commissionService;
-    private ExchangeRateCalculationService $exchangeRateCalculationService;
 
     /**
      * @param TransactionService $transactionService
      * @param CommissionService $commissionService
-     * @param ExchangeRateCalculationService $exchangeRateCalculationService
      */
     public function __construct(
         TransactionService             $transactionService,
-        CommissionService              $commissionService,
-        ExchangeRateCalculationService $exchangeRateCalculationService
+        CommissionService              $commissionService
     )
     {
         parent::__construct();
         $this->transactionService = $transactionService;
         $this->commissionService = $commissionService;
-        $this->exchangeRateCalculationService = $exchangeRateCalculationService;
     }
 
     public function handle()
     {
-        $transactionCsv = fopen(public_path('files/transaction.csv'), 'r');
+        $transactionCsv = fopen(public_path('files/' . $this->argument('file')), 'r');
 
         if ($transactionCsv !== FALSE) {
             while (($transaction = fgetcsv($transactionCsv, 100, ',')) !== FALSE) {
@@ -46,7 +41,7 @@ class TransactionImportCommand extends Command
                 $transactionAmount = (float) $transaction[4];
                 $currency = $transaction[5];
                 $commission = $this->commissionService->calculate($userId, $transactionAmount, $transactionType, $transactionDate, $clientType, $currency);
-                echo $commission . PHP_EOL;
+                echo number_format($commission, 2) . PHP_EOL;
                 $this->transactionService->save([
                     'date' => $transactionDate,
                     'user_id' => $userId,
