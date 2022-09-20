@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Constants\ExchangeRateConstant;
 use App\Helpers\CommonHelper;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class ExchangeRateCalculationService
@@ -26,9 +27,13 @@ class ExchangeRateCalculationService
 
     private function initRates()
     {
-        $response = Http::get('https://developers.paysera.com/tasks/api/currency-exchange-rates');
-        if($response->successful()) {
-            $this->rates = $response->json()['rates'];
+        if(Cache::has('exchange_rates')) {
+            $this->rates = Cache::get('exchange_rates');
+        } else {
+            $response = Http::get('https://developers.paysera.com/tasks/api/currency-exchange-rates');
+            if ($response->successful()) {
+                $this->rates = $response->json()['rates'];
+            }
         }
     }
 }
