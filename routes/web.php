@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\CommonHelper;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $rates = new \App\Services\ExchangeRateCalculationService();
+    echo CommonHelper::formatNumber($rates->calculate(500, 'JPY'));
 });
