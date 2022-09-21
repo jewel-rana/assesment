@@ -27,8 +27,6 @@ class TransactionImportCommand extends Command
     {
         $transactionCsv = fopen(public_path('files/' . $this->argument('file')), 'r');
 
-        dd($transactionCsv);
-
         if ($transactionCsv !== FALSE) {
             while (($transaction = fgetcsv($transactionCsv, 100, ',')) !== FALSE) {
                 $transactionDate = $transaction[0];

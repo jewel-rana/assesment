@@ -7,12 +7,6 @@ use Illuminate\Support\Facades\Cache;
 
 class TransactionService
 {
-    private CommissionService $commissionService;
-    public function __construct(CommissionService $commissionService)
-    {
-        $this->commissionService = $commissionService;
-    }
-
     public function save(array $data)
     {
         $transactions = Cache::get('transactions') ?? [];
@@ -37,7 +31,7 @@ class TransactionService
 
     public function import($transactionDate, $userId, $clientType, $transactionType, $transactionAmount, $currency): float
     {
-        $commission = $this->commissionService->calculate($userId, $transactionAmount, $transactionType, $transactionDate, $clientType, $currency);
+        $commission = (new CommissionService())->calculate($userId, $transactionAmount, $transactionType, $transactionDate, $clientType, $currency);
         $this->save([
             'date' => $transactionDate,
             'user_id' => $userId,
