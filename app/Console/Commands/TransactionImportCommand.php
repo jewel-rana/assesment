@@ -23,6 +23,10 @@ class TransactionImportCommand extends Command
         $this->transactionService = $transactionService;
     }
 
+    /**
+     * This method handle csv file, process the transaction and print commission amount to the console
+     * @return void
+     */
     public function handle()
     {
         $transactionCsv = fopen(public_path('files/' . $this->argument('file')), 'r');

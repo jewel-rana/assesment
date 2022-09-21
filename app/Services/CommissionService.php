@@ -6,7 +6,16 @@ use App\Helpers\CommonHelper;
 
 class CommissionService
 {
-    public function calculate($user_id, $amount, $transaction_type, $transaction_date, $client_type, $currency = 'EUR'): float
+    /**
+     * @param $user_id
+     * @param $amount
+     * @param $transaction_type
+     * @param $transaction_date
+     * @param $client_type
+     * @param string $currency
+     * @return float
+     */
+    public function calculate($user_id, $amount, $transaction_type, $transaction_date, $client_type, string $currency = 'EUR'): float
     {
         $commissionAbleAmount = $this->getCommissionAbleAmount($user_id, $amount, $transaction_type, $transaction_date, $client_type, $currency);
         $commissionRate = CommonHelper::getCommissionRate($transaction_type, $client_type);
@@ -14,7 +23,16 @@ class CommissionService
         return CommonHelper::formatCommission($commission);
     }
 
-    public function getCommissionAbleAmount($user_id, $amount, $transaction_type, $transaction_date, $client_type, $currency)
+    /**
+     * @param int $user_id
+     * @param float $amount
+     * @param string $transaction_type
+     * @param string $transaction_date
+     * @param string $client_type
+     * @param string $currency
+     * @return float
+     */
+    public function getCommissionAbleAmount(int $user_id, float $amount, string $transaction_type, string $transaction_date, string $client_type, string $currency): float
     {
         if (
             in_array($transaction_type, (array)config('commission.free_of_charges.transaction_types'))

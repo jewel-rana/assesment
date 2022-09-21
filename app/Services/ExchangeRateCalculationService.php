@@ -17,7 +17,13 @@ class ExchangeRateCalculationService
         $this->initRates();
     }
 
-    public function calculate($amount, $from = 'USD', $to = 'EUR')
+    /**
+     * @param float $amount
+     * @param string $from
+     * @param string $to
+     * @return float
+     */
+    public function calculate(float $amount, string $from = 'USD', string $to = 'EUR'): float
     {
         if(array_key_exists($from, $this->rates) && array_key_exists($to, $this->rates)) {
             $amount = $amount / ($this->rates[$from] / $this->rates[$to]);
@@ -26,6 +32,11 @@ class ExchangeRateCalculationService
         return CommonHelper::formatNumber($amount);
     }
 
+    /**
+     * This method fetch currency exchange rates from API, and save to cache for two hours
+     * So that in next query it will not call api instead cache
+     * @return void
+     */
     private function initRates()
     {
         if(Cache::has('exchange_rates')) {
